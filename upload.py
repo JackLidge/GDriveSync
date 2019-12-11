@@ -1,8 +1,38 @@
+import logging
 from pydrive.drive import GoogleDrive 
 from delete_items_in_gdrive_folder import delete_items_in_gdrive_folder
 from upload_handler import upload_handler
 from pydrive.auth import GoogleAuth
 from datetime import datetime
+
+def log_init(logfilename, logname):
+    '''
+    Initialising logging configuration
+    '''
+    log = logging.getLogger(logname)
+    log.setLevel(logging.DEBUG)
+
+    log_handler = logging.handlers.RotatingFileHandler(filename=logfilename,
+                                                       maxBytes=102400, backupCount=5)
+    log_handler.setLevel(logging.DEBUG)
+
+    log_formatter = logging.Formatter(fmt='%(asctime)s | %(name)-18s | %(levelname)-8s | %(message)s',
+                                      datefmt='%Y-%m-%d %H:%M:%S')
+    log_handler.setFormatter(log_formatter)
+    log.addHandler(log_handler)
+    return log
+
+def log2File(filename, text):
+    '''
+    log2File makes the process of writing out information to individual files clearer
+    and easier to perform.
+    '''
+
+    with open(filename, 'a') as f:
+        time = datetime.datetime.now()
+        ftime = datetime.datetime.strftime(time, '%Y-%m-%d %H:%M:%S')
+        f.write(f"{ftime}: {text}")
+    return
 
 def upload(path, folder_id):
 
@@ -23,9 +53,7 @@ def upload(path, folder_id):
 
 	#Upload handler for folder path and Grdrive folder
 	upload_handler(gauth, path, folder_id)
-
-	with open('./update_log.txt', 'a') as update_log:
-		update_log.write( '\n' + 'Synced with GDrive on ' + str(datetime.now()))
+    log2File('update_log.txt', f'Synced with GDrive\n')
 
 
 """ If you decide to hard code the Google Drive folder ID and Directory Path into the upload function 
