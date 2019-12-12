@@ -1,9 +1,10 @@
 import logging
+import datetime
 from pydrive.drive import GoogleDrive 
 from delete_items_in_gdrive_folder import delete_items_in_gdrive_folder
 from upload_handler import upload_handler
 from pydrive.auth import GoogleAuth
-from datetime import datetime
+
 
 def log_init(logfilename, logname):
     '''
@@ -36,23 +37,26 @@ def log2File(filename, text):
 
 def upload(path, folder_id):
 
-	""" Initial Authentication, local """
-	gauth = GoogleAuth()
-	gauth.LocalWebserverAuth()
-
-	# Gdrive folder id, if you want hard code it
-	#folder_id = ''
-	
-	#print(drive, vars(gauth))
+    """ Initial Authentication, local """
+    gauth = GoogleAuth()
+    
+    gauth.LoadCredentialsFile('credentials.txt')
+    if not gauth.credentials:
+        gauth.LocalWebserverAuth()
+    elif gauth.access_token_expired:
+        gauth.Refresh()
+    else:
+        gauth.Authorize()
+    gauth.SaveCredentialsFile('credentials.txt')
 
 	# Empty Gdrive folder
-	delete_items_in_gdrive_folder(gauth, folder_id)
+    delete_items_in_gdrive_folder(gauth, folder_id)
 
 	#Path to folder for sync if you want to hard code it
 	#path = '' 
 
 	#Upload handler for folder path and Grdrive folder
-	upload_handler(gauth, path, folder_id)
+    upload_handler(gauth, path, folder_id)
     log2File('update_log.txt', f'Synced with GDrive\n')
 
 
