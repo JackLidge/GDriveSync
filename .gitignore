@@ -1,5 +1,6 @@
 .DS_Store
 /client_secrets.json
-/info.txt
 /__pycache__
 /credentials.txt
+/folder_sync_registrer.txt
+/update_log.txt
