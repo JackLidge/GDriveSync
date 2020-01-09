@@ -38,8 +38,6 @@ def log2File(filename, text):
 def gdrive_sync(gauth, os_root_path, gdrive_root_folder_id, archive_time):
     '''
     Function which performs the sync operation.
-    TODO: Add in function which deletes files from Google Drive which are no longer present in
-    local folder.
     '''
 
     with open('update_log.txt') as f:
@@ -97,9 +95,15 @@ def gdrive_sync(gauth, os_root_path, gdrive_root_folder_id, archive_time):
                 if int((cur_date - mod_date).days) > int(archive_time):
                     file.Delete()
 
-def upload(path, folder_id, archive):
+@click.command()
+@click.option('-l', '--local', nargs=1, type=click.STRING, help='Local folder to be backed up.')
+@click.option('-r', '--remote', nargs=1, type=click.STRING, help='Google Drive folder end string.')
+@click.option('--archive', default=-1, help='Time length of data to be archived.')
 
-    """ Initial Authentication, local """
+def main(local, remote, archive):
+    '''
+    Authenticate access to Google Drive, then proceed to syncing steps if successful.
+    '''
     gauth = GoogleAuth()
     
     gauth.LoadCredentialsFile('credentials.txt')
@@ -111,24 +115,8 @@ def upload(path, folder_id, archive):
         gauth.Authorize()
     gauth.SaveCredentialsFile('credentials.txt')
 
-    gdrive_sync(gauth, path, folder_id, archive)
+    gdrive_sync(gauth, local, remote, archive)
     log2File('update_log.txt', f'Synced with GDrive\n')
-
-
-""" If you decide to hard code the Google Drive folder ID and Directory Path into the upload function 
-	you dont have to read the folder_sync_registrer below. You can just remove the code and uncomment
-	the upload call below this section
-"""
-
-@click.command()
-@click.option('--archive', default=-1, help='Time length of data to be archived.')
-
-def main(archive):
-    with open('folder_sync_registrer.txt', 'r') as f:
-        info = f.readlines()
-        info = info[0].split(',')
-        info = [i.strip() for i in info]
-        upload(info[0], info[1], archive)
         
 if __name__ == '__main__':
     main()
