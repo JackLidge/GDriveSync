@@ -4,6 +4,7 @@ This program will back up data in a directory to a Google Account with a valid c
 Originally based off code in [this repository](https://github.com/SamirStandnes/gdrive_sync_folder_script)
 
 ### Usage
+```bash
 Usage: upload.py [OPTIONS]
 
   Authenticate access to Google Drive, then proceed to syncing steps if
@@ -14,3 +15,4 @@ Options:
   -r, --remote TEXT  Google Drive folder end string.
   --archive INTEGER  Time length of data to be archived.
   --help             Show this message and exit.
+```
