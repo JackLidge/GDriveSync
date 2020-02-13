@@ -1,17 +1,16 @@
-## Sync local folder with your Google Drive
+## GDriveSync
 
-This program syncs all local folder (pathnames) in `folder_sync_registrer.txt` to their matching Goolge folder ID. Each local pathname must have a Google folder ID to sync to. Pathname and Google folder ID can also be hard coded into the `Upload()` function. 
+This program will back up data in a directory to a Google Account with a valid client_secrets.json file in the same directory as it. Can also delete data from the remote Google Drive directory after a certain amount of days if requested. 
+Originally based off code in [this repository](https://github.com/SamirStandnes/gdrive_sync_folder_script)
 
+### Usage
+Usage: upload.py [OPTIONS]
 
-### Run the program
-Run `upload.py`
+  Authenticate access to Google Drive, then proceed to syncing steps if
+  successful.
 
-
-
-This [Medium](https://medium.com/swlh/sync-a-folder-on-your-computer-to-google-drive-with-python-5155e73e18ca) post explains how to implement this code youself.
-
-
-
-
-
-
+Options:
+  -l, --local TEXT   Local folder to be backed up.
+  -r, --remote TEXT  Google Drive folder end string.
+  --archive INTEGER  Time length of data to be archived.
+  --help             Show this message and exit.
